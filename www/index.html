@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<title>Hello World</title>
+	</head>
+	<body>
+		<header class="mdc-top-app-bar mdc-top-app-bar--fixed">
+			<div class="mdc-top-app-bar__row">
+				<section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+					<a href="#" class="material-icons mdc-top-app-bar__navigation-icon">menu</a>
+					<span class="mdc-top-app-bar__title">Galería</span>
+				</section>
+			</div>
+		</header>
+
+		<div class="app">
+			<button id="open-gallery">Abrir Galería</button>
+		</div>
+
+		<script type="text/javascript" src="cordova.js"></script>
+		<script src="https://www.gstatic.com/firebasejs/5.5.7/firebase.js"></script>
+		<script>
+			// Initialize Firebase
+			var config = {
+				apiKey: "AIzaSyDfljBdTpvJMqEYyeJ6PpsTtEQs6siO5cI",
+				authDomain: "photos-d15d7.firebaseapp.com",
+				databaseURL: "https://photos-d15d7.firebaseio.com",
+				projectId: "photos-d15d7",
+				storageBucket: "photos-d15d7.appspot.com",
+				messagingSenderId: "1019516589030"
+			};
+			firebase.initializeApp(config);
+		</script>
+		<script type="text/javascript" src="index.js"></script>
+	</body>
+</html>
