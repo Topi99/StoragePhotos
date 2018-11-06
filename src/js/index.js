@@ -18,8 +18,6 @@ const uploadFileToStorage = file => {
       xs: `xs_${name}.jpg`,
     });
   });
-
-  
 }
 
 const setOptions = srcType => {
