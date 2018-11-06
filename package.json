@@ -12,6 +12,7 @@
     "license": "Apache-2.0",
     "dependencies": {
         "@material/fab": "^0.41.0",
+        "@material/image-list": "^0.41.0",
         "@material/top-app-bar": "^0.41.0",
         "cordova-android": "^7.1.1",
         "cordova-plugin-camera": "4.0.3",

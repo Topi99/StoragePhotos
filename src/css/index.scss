@@ -1,4 +1,5 @@
 @import "~@material/top-app-bar/mdc-top-app-bar";
+@import "~@material/image-list/mdc-image-list";
 
 * {
   padding: 0;
@@ -15,4 +16,8 @@ body, html {
 
 .mdc-top-app-bar {
   box-shadow: 0px 3px 5px rgba(0,0,0,.3);
+}
+
+.my-masonry-image-list {
+  @include mdc-image-list-masonry-columns(3);
 }

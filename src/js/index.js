@@ -5,19 +5,21 @@ import crypto from 'crypto';
 const uploadFileToStorage = file => {
   let name = `${crypto.randomBytes(20).toString('hex')}`;
   const storageRef = firebase.storage().ref().child(`${name}.jpg`);
-  const dbRef = firebase.database().ref(name);
+  const dbRef = firebase.database().ref('images/'+name);
 
   storageRef.put(file).then(snapshot => {
     console.log('Uploaded file');
     alert('Uploaded file');
+
+    dbRef.set({
+      original: `original_${name}.jpg`,
+      md: `md_${name}.jpg`,
+      sm: `sm_${name}.jpg`,
+      xs: `xs_${name}.jpg`,
+    });
   });
 
-  dbRef.child().set({
-    original: `original_${name}.jpg`,
-    md: `md_${name}.jpg`,
-    sm: `sm_${name}.jpg`,
-    xs: `xs_${name}.jpg`,
-  });
+  
 }
 
 const setOptions = srcType => {
@@ -66,6 +68,26 @@ function loadXHR(url) {
   });
 }
 
+const getImageElement = (src) => {
+  let li = document.createElement('li');
+  let img = document.createElement('img');
+  let div = document.createElement('div');
+  let span = document.createElement('span');
+
+  li.setAttribute('class', 'mdc-image-list__item');
+  img.setAttribute('class', 'mdc-image-list__image');
+  img.setAttribute('src', src);
+  div.setAttribute('class', 'mdc-image-list__supporting');
+  span.setAttribute('class', 'mdc-image-list__label');
+  span.innerHTML = 'Text Label';
+
+  div.appendChild(span);
+  li.appendChild(img);
+  li.appendChild(img);
+
+  return li;
+}
+
 var app = {
   initialize: function() {
     document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -89,12 +111,27 @@ var app = {
 
         loadXHR(imageUri).then((blob) => {
           uploadFileToStorage(blob);
-          // console.log(blob);
-          // console.log();
         })
       }, error => {
           console.debug("Unable to obtain picture: " + error, "app");
       }, options);
+    });
+
+    const dbRef = firebase.database().ref('images/');
+    const storageRef = firebase.storage().ref();
+    const imageList = document.querySelector('#image-list');
+    let element;
+    // let md_url;
+
+    // Leemos cada vez que se añada un nuevo hijo
+    dbRef.on('child_added', data => {
+      console.log(`Child added: \n${data.val().md}`);
+
+      storageRef.child(data.val().md).getDownloadURL().then(url => {
+        console.log(url);
+        element = getImageElement(url);
+        imageList.insertBefore(element, imageList.firstChild);
+      });
     });
   },
 }
