@@ -1,22 +1,31 @@
 import {MDCTopAppBar} from '@material/top-app-bar/index';
 import '../css/index.scss';
 import crypto from 'crypto';
+import mime from 'mime';
 
-const uploadFileToStorage = file => {
+const uploadFileToStorage = (file, type) => {
   let name = `${crypto.randomBytes(20).toString('hex')}`;
-  const storageRef = firebase.storage().ref().child(`${name}.jpg`);
   const dbRef = firebase.database().ref('images/'+name);
+  let nameWExt = `${name}.${mime.getExtension(type)}`;
+  const storageRef = firebase.storage().ref().child(`${nameWExt}`);
 
   storageRef.put(file).then(snapshot => {
     console.log('Uploaded file');
     alert('Uploaded file');
 
-    dbRef.set({
-      original: `original_${name}.jpg`,
-      md: `md_${name}.jpg`,
-      sm: `sm_${name}.jpg`,
-      xs: `xs_${name}.jpg`,
-    });
+    if(type === 'image/jpeg' || type === 'image/png') {
+      dbRef.set({
+        original: `original_${nameWExt}`,
+        md: `md_${nameWExt}`,
+        sm: `sm_${nameWExt}`,
+        xs: `xs_${nameWExt}`,
+      });
+    } else if (type === 'video/mp4') {
+      dbRef.set({
+        original: `original_${nameWExt}`,
+        md: `md_${name}.png`,
+      });
+    }
   });
 }
 
@@ -28,41 +37,28 @@ const setOptions = srcType => {
     // In this app, dynamically set the picture source, Camera or photo gallery
     sourceType: srcType,
     encodingType: Camera.EncodingType.JPEG,
-    mediaType: Camera.MediaType.PICTURE,
+    mediaType: Camera.MediaType.ALLMEDIA,
     allowEdit: true,
     correctOrientation: true  //Corrects Android orientation quirks
   }
   return options;
 }
 
-const createNewFileEntry = imgUri => {
-  window.resolveLocalFileSystemURL(cordova.file.cacheDirectory, function success(dirEntry) {
-    // JPEG file
-    dirEntry.getFile("tempFile.jpeg", { create: true, exclusive: false }, function (fileEntry) {
-      // Do something with it, like write to it, upload it, etc.
-      // writeFile(fileEntry, imgUri);
-      console.log("got file: " + fileEntry.fullPath);
-      return fileEntry;
-      // displayFileData(fileEntry.fullPath, "File copied to");
-
-    }, onErrorCreateFile);
-
-  }, onErrorResolveUrl);
-}
-
-function loadXHR(url) {
-  return new Promise(function(resolve, reject) {
-    try {
-      var xhr = new XMLHttpRequest();
-      xhr.open("GET", url);
-      xhr.responseType = "blob";
-      xhr.onerror = function() {reject("Network error.")};
-      xhr.onload = function() {
-          resolve(xhr.response);
-      };
-      xhr.send();
-    }
-    catch(err) {reject(err.message)}
+const getFile = imgUri => {
+  // let myFileEntry;
+  window.resolveLocalFileSystemURL(imgUri, function success(fileEntry) {
+    console.log(fileEntry.fullPath);
+    // let type = getMimeType(fileEntry.fullPath);
+    let type = mime.getType(fileEntry.fullPath);
+    fileEntry.file(file => {
+      console.log(`From getFile(): ${file}`);
+      let reader = new FileReader();
+      reader.onloadend = () => {
+        let blob = new Blob([new Uint8Array(reader.result)], { type: type });   
+        uploadFileToStorage(blob, type);
+      }
+      reader.readAsArrayBuffer(file);
+    }, error => {console.log(error)});
   });
 }
 
@@ -86,6 +82,29 @@ const getImageElement = (src) => {
   return li;
 }
 
+const openGalleryEvent = async () => {
+  const srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
+  const options = setOptions(srcType);
+  
+  navigator.camera.getPicture(imageUri => {
+    console.log(imageUri);
+    const uri = `file://${imageUri}`;
+    resolveFile(uri);
+  }, error => {
+    console.debug("Unable to obtain picture: " + error, "app");
+  }, options);
+
+}
+
+const resolveFile = async imageUri => {
+  getFile(imageUri);
+  // let file = await getFile(fileEntry);
+  // console.log(`From the file object ${file.name}`);
+  // loadXHR(imageUri).then((blob) => {
+  //   uploadFileToStorage(blob);
+  // })
+}
+
 var app = {
   initialize: function() {
     document.addEventListener('deviceready', this.onDeviceReady.bind(this), false);
@@ -95,24 +114,13 @@ var app = {
     this.receivedEvent('deviceready');
   },
   
-  receivedEvent: function(id) {
+  receivedEvent: async function(id) {
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     const openGalleryBtn = document.querySelector('#open-gallery');
     
     openGalleryBtn.addEventListener('click', () => {
-      const srcType = Camera.PictureSourceType.SAVEDPHOTOALBUM;
-      const options = setOptions(srcType);
-      
-      navigator.camera.getPicture(imageUri => {
-        console.log(`Getting ${imageUri}`);
-
-        loadXHR(imageUri).then((blob) => {
-          uploadFileToStorage(blob);
-        })
-      }, error => {
-          console.debug("Unable to obtain picture: " + error, "app");
-      }, options);
+      openGalleryEvent();
     });
 
     const dbRef = firebase.database().ref('images/');
