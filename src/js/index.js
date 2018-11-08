@@ -3,27 +3,30 @@ import '../css/index.scss';
 import crypto from 'crypto';
 import mime from 'mime';
 
-const uploadFileToStorage = (file, type) => {
+const uploadFileToStorage = async (file, type) => {
   let name = `${crypto.randomBytes(20).toString('hex')}`;
   const dbRef = firebase.database().ref('images/'+name);
   let nameWExt = `${name}.${mime.getExtension(type)}`;
   const storageRef = firebase.storage().ref().child(`${nameWExt}`);
-
+  
   storageRef.put(file).then(snapshot => {
     console.log('Uploaded file');
     alert('Uploaded file');
-
     if(type === 'image/jpeg' || type === 'image/png') {
       dbRef.set({
         original: `original_${nameWExt}`,
         md: `md_${nameWExt}`,
         sm: `sm_${nameWExt}`,
         xs: `xs_${nameWExt}`,
+        id: name,
+        type: type
       });
     } else if (type === 'video/mp4') {
       dbRef.set({
         original: `original_${nameWExt}`,
         md: `md_${name}.png`,
+        id: name,
+        type: type
       });
     }
   });
@@ -98,11 +101,34 @@ const openGalleryEvent = async () => {
 
 const resolveFile = async imageUri => {
   getFile(imageUri);
-  // let file = await getFile(fileEntry);
-  // console.log(`From the file object ${file.name}`);
-  // loadXHR(imageUri).then((blob) => {
-  //   uploadFileToStorage(blob);
-  // })
+}
+
+const openElement = (original, type) => {
+  // alert(original);
+  const storageRef = firebase.storage().ref();
+  storageRef.child(original).getDownloadURL().then(url => {
+    let player, img, video, src;
+  
+    if(type === 'image/jpeg' || type === 'image/png') {
+      player = document.querySelector('.image-player');
+      img = player.childNodes[3];
+      img.setAttribute('src', url);
+      // console.log(player.childNodes);
+    } else if (type === 'video/mp4') {
+      player = document.querySelector('.video-player');
+      video = player.childNodes[3];
+      src = video.childNodes[1];
+      src.setAttribute('src', url);
+      video.load();
+      video.play();
+    }
+  
+    player.classList.toggle('hidden');
+    player.classList.toggle('active');
+
+
+  });
+  
 }
 
 var app = {
@@ -118,9 +144,24 @@ var app = {
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     const openGalleryBtn = document.querySelector('#open-gallery');
+    const player = document.querySelector('.image-player');
+    const videoPlayer = document.querySelector('.video-player');
+    const btnCloseImage = document.querySelector('.image-player .close');
+    const btnCloseVideo = document.querySelector('.video-player .close');
     
     openGalleryBtn.addEventListener('click', () => {
       openGalleryEvent();
+    });
+
+    btnCloseImage.addEventListener('click', () => {
+      player.classList.toggle('hidden');
+      player.classList.toggle('active');
+    });
+
+    btnCloseVideo.addEventListener('click', () => {
+      videoPlayer.classList.toggle('hidden');
+      videoPlayer.classList.toggle('active');
+      videoPlayer.childNodes[3].pause();
     });
 
     const dbRef = firebase.database().ref('images/');
@@ -131,11 +172,14 @@ var app = {
 
     // Leemos cada vez que se añada un nuevo hijo
     dbRef.on('child_added', data => {
-      console.log(`Child added: \n${data.val().md}`);
-
       storageRef.child(data.val().md).getDownloadURL().then(url => {
-        console.log(url);
         element = getImageElement(url);
+        element.setAttribute('id', data.val().id);
+        element.dataset.original = data.val().original;
+        element.dataset.type = data.val().type;
+        element.addEventListener('click', e => {
+          openElement(e.target.parentNode.dataset.original, e.target.parentNode.dataset.type);
+        });
         imageList.insertBefore(element, imageList.firstChild);
       });
     });

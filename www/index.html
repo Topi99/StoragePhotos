@@ -18,8 +18,20 @@
 		</header>
 
 		<div class="app">
-			<button id="open-gallery">Abrir Galería</button>
-
+			<div class="image-player hidden">
+				<button class="close">
+						<span class="material-icons">close</span>
+				</button>
+				<img src="" alt="imagen">
+			</div>
+			<div class="video-player hidden">
+				<button class="close">
+						<span class="material-icons">close</span>
+				</button>
+				<video controls>
+					<source src=""/>
+				</video>
+			</div>
 			<ul class="mdc-image-list mdc-image-list--masonry my-masonry-image-list" id="image-list"> 
 				<!--
 					<li class="mdc-image-list__item">
@@ -32,6 +44,10 @@
 					</li>
 				-->
 			</ul>
+
+			<button class="mdc-fab" aria-label="Add" id="open-gallery">
+				<span class="mdc-fab__icon material-icons">add</span>
+			</button>
 
 		</div>
 
