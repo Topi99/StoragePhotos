@@ -15,6 +15,16 @@
 					<span class="mdc-top-app-bar__title">Galería</span>
 				</section>
 			</div>
+			<div role="progressbar" class="mdc-linear-progress">
+				<div class="mdc-linear-progress__buffering-dots"></div>
+				<div class="mdc-linear-progress__buffer"></div>
+				<div class="mdc-linear-progress__bar mdc-linear-progress__primary-bar">
+					<span class="mdc-linear-progress__bar-inner"></span>
+				</div>
+				<div class="mdc-linear-progress__bar mdc-linear-progress__secondary-bar">
+					<span class="mdc-linear-progress__bar-inner"></span>
+				</div>
+			</div>
 		</header>
 
 		<div class="app">
@@ -45,9 +55,23 @@
 				-->
 			</ul>
 
-			<button class="mdc-fab" aria-label="Add" id="open-gallery">
-				<span class="mdc-fab__icon material-icons">add</span>
-			</button>
+			<div class="fab-container">
+				<ul class="fab-children">
+					<li>
+						<button class="mdc-fab mdc-fab--mini" aria-label="Add" id="open-camera">
+							<span class="mdc-fab__icon material-icons">camera_alt</span>
+						</button>
+					</li>
+					<li>
+						<button class="mdc-fab mdc-fab--mini" aria-label="Add" id="open-gallery">
+							<span class="mdc-fab__icon material-icons">collections</span>
+						</button>
+					</li>
+				</ul>
+				<button class="mdc-fab main-fab" aria-label="Add" id="open-fabs">
+					<span class="mdc-fab__icon material-icons">add</span>
+				</button>
+			</div>
 
 		</div>
 

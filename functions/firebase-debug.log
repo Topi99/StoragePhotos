@@ -1,0 +1,144 @@
+[debug] [2018-11-08T22:48:19.388Z] ----------------------------------------------------------------------
+[debug] [2018-11-08T22:48:19.390Z] Command:       /usr/bin/node /usr/local/bin/firebase deploy
+[debug] [2018-11-08T22:48:19.390Z] CLI Version:   6.0.1
+[debug] [2018-11-08T22:48:19.390Z] Platform:      linux
+[debug] [2018-11-08T22:48:19.390Z] Node Version:  v10.13.0
+[debug] [2018-11-08T22:48:19.390Z] Time:          Thu Nov 08 2018 16:48:19 GMT-0600 (GMT-06:00)
+[debug] [2018-11-08T22:48:19.390Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-11-08T22:48:19.399Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-11-08T22:48:19.399Z] > authorizing via signed-in user
+[debug] [2018-11-08T22:48:19.399Z] [iam] checking project photos-d15d7 for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","firebase.projects.get","firebasedatabase.instances.update","firebaserules.releases.create","firebaserules.releases.update","firebaserules.rulesets.create"]
+[debug] [2018-11-08T22:48:19.400Z] >>> HTTP REQUEST POST https://cloudresourcemanager.googleapis.com/v1/projects/photos-d15d7:testIamPermissions  
+
+[debug] [2018-11-08T22:48:19.821Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:19.824Z] >>> HTTP REQUEST GET https://firebase.googleapis.com/v1beta1/projects/photos-d15d7  
+ 
+[debug] [2018-11-08T22:48:20.119Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Deploying to 'photos-d15d7'...
+[info] 
+[info] i  deploying database, storage, functions
+[info] Running command: npm --prefix "$RESOURCE_DIR" run lint
+[info] ✔  functions: Finished running predeploy script.
+[info] i  database: checking rules syntax...
+[debug] [2018-11-08T22:48:23.046Z] >>> HTTP REQUEST PUT https://photos-d15d7.firebaseio.com/.settings/rules.json?dryRun=true  
+ {
+  "rules": {
+    ".read": "auth == null",
+    ".write": "auth == null"
+  }
+}
+[debug] [2018-11-08T22:48:23.803Z] <<< HTTP RESPONSE 200
+[info] ✔  database: rules syntax for database photos-d15d7 is valid
+[debug] [2018-11-08T22:48:23.804Z] >>> HTTP REQUEST GET https://appengine.googleapis.com/v1/apps/photos-d15d7  
+ 
+[debug] [2018-11-08T22:48:24.213Z] <<< HTTP RESPONSE 200
+[info] i  storage: checking storage.rules for compilation errors...
+[debug] [2018-11-08T22:48:24.216Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/photos-d15d7:test  
+
+[debug] [2018-11-08T22:48:24.340Z] <<< HTTP RESPONSE 200
+[info] ✔  storage: rules file storage.rules compiled successfully
+[debug] [2018-11-08T22:48:24.344Z] > [functions] package.json contents: {
+  "name": "functions",
+  "description": "Cloud Functions for Firebase",
+  "scripts": {
+    "lint": "eslint .",
+    "serve": "firebase serve --only functions",
+    "shell": "firebase functions:shell",
+    "start": "npm run shell",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log"
+  },
+  "dependencies": {
+    "@google-cloud/storage": "^2.2.0",
+    "child-process-promise": "^2.2.1",
+    "firebase-admin": "~6.0.0",
+    "firebase-functions": "^2.1.0",
+    "loadash": "^1.0.0",
+    "sharp": "^0.21.0"
+  },
+  "devDependencies": {
+    "eslint": "^4.12.0",
+    "eslint-plugin-promise": "^3.6.0"
+  },
+  "private": true
+}
+[info] i  functions: ensuring necessary APIs are enabled...
+[debug] [2018-11-08T22:48:24.345Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/cloudfunctions.googleapis.com/projectSettings/photos-d15d7?view=CONSUMER_VIEW  
+ 
+[debug] [2018-11-08T22:48:24.346Z] >>> HTTP REQUEST GET https://servicemanagement.googleapis.com/v1/services/runtimeconfig.googleapis.com/projectSettings/photos-d15d7?view=CONSUMER_VIEW  
+ 
+[debug] [2018-11-08T22:48:25.141Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:25.208Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: all necessary APIs are enabled
+[debug] [2018-11-08T22:48:25.209Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/photos-d15d7  
+ 
+[debug] [2018-11-08T22:48:25.548Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:25.549Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/1019516589030:getServerAppConfig  
+ 
+[debug] [2018-11-08T22:48:25.723Z] <<< HTTP RESPONSE 200
+[info] i  storage: uploading rules storage.rules...
+[debug] [2018-11-08T22:48:25.724Z] >>> HTTP REQUEST POST https://firebaserules.googleapis.com/v1/projects/photos-d15d7/rulesets  
+
+[debug] [2018-11-08T22:48:26.057Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:26.057Z] [rules] created ruleset projects/photos-d15d7/rulesets/9804a6e1-b11d-4ce7-bf3c-66df8363f61f
+[info] i  functions: preparing functions directory for uploading...
+[info] i  functions: packaged functions (23.37 MB) for uploading
+[debug] [2018-11-08T22:48:28.396Z] >>> HTTP REQUEST POST https://cloudfunctions.googleapis.com/v1/projects/photos-d15d7/locations/us-central1/functions:generateUploadUrl  
+ 
+[debug] [2018-11-08T22:48:28.719Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:28.720Z] >>> HTTP REQUEST PUT https://storage.googleapis.com/gcf-upload-us-central1-e2dd95a0-af19-4f3c-9562-2e5e52215b03/036cd86c-2a32-4da4-9fa0-90acc4cd5a47.zip?GoogleAccessId=service-1019516589030@gcf-admin-robot.iam.gserviceaccount.com&Expires=1541719108&Signature=MsUckjdMwQT9qE88qOPje1lEGar8UJB27KzEcIjGOv9YbooboGw5P7IVWqZW01oQUIQ1q8jwg%2BfwtXFPgjuE%2FaNG3DsVhTEAU2XkeO0pRp4wrnqZmrnj9gm7qaNRWokMPm7JiM2N0pifi1hl9s2ONTNe5iQzeB9QQdvQXCoI4REDIfEor1Vb%2B5X8Zw6EUF3v8uNqIODepvP5mvs%2FcTWNqgn%2FzucSFj0V6fpab%2BM%2Bizgc8JiesacRKYn8kZr4IHnWB3AKOmef1QWaAUfMHIRnACsQp8IDjit0CLuSTBKjMfA7N9iW9PI8k9QFcl%2BWAGs6Osth4%2F1HXdwSdA2iC%2BUzEQ%3D%3D  
+
+[debug] [2018-11-08T22:48:31.890Z] <<< HTTP RESPONSE 200
+[info] ✔  functions: functions folder uploaded successfully
+[info] i  database: releasing rules...
+[debug] [2018-11-08T22:48:31.891Z] >>> HTTP REQUEST PUT https://photos-d15d7.firebaseio.com/.settings/rules.json  
+ {
+  "rules": {
+    ".read": "auth == null",
+    ".write": "auth == null"
+  }
+}
+[debug] [2018-11-08T22:48:32.350Z] <<< HTTP RESPONSE 200
+[info] ✔  database: rules for database photos-d15d7 released successfully
+[debug] [2018-11-08T22:48:32.351Z] [rules] releasing firebase.storage/photos-d15d7.appspot.com with ruleset projects/photos-d15d7/rulesets/9804a6e1-b11d-4ce7-bf3c-66df8363f61f
+[debug] [2018-11-08T22:48:32.351Z] >>> HTTP REQUEST PATCH https://firebaserules.googleapis.com/v1/projects/photos-d15d7/releases/firebase.storage/photos-d15d7.appspot.com  
+
+[debug] [2018-11-08T22:48:32.527Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:32.528Z] [rules] updated release projects/photos-d15d7/releases/firebase.storage/photos-d15d7.appspot.com
+[info] ✔  storage: released rules storage.rules to firebase.storage/photos-d15d7.appspot.com
+[debug] [2018-11-08T22:48:32.529Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/projects/photos-d15d7/locations/-/functions  
+ 
+[debug] [2018-11-08T22:48:32.908Z] <<< HTTP RESPONSE 200
+[info] i  functions: updating Node.js 6 function onFileChange(us-central1)...
+[debug] [2018-11-08T22:48:32.911Z] Trigger is:  {"eventTrigger":{"resource":"projects/_/buckets/photos-d15d7.appspot.com","eventType":"google.storage.object.finalize","service":"storage.googleapis.com"}}
+[debug] [2018-11-08T22:48:32.912Z] >>> HTTP REQUEST PATCH https://cloudfunctions.googleapis.com/v1/projects/photos-d15d7/locations/us-central1/functions/onFileChange {"updateMask":"sourceUploadUrl,name,labels,eventTrigger.resource,eventTrigger.eventType,eventTrigger.service"} 
+
+[debug] [2018-11-08T22:48:33.358Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:33.360Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:33.624Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:35.625Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:35.797Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:37.800Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:38.030Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:40.031Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:40.231Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:42.232Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:42.421Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:44.424Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:44.601Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:46.604Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:46.832Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:48.833Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 
+[debug] [2018-11-08T22:48:48.984Z] <<< HTTP RESPONSE 200
+[debug] [2018-11-08T22:48:50.986Z] >>> HTTP REQUEST GET https://cloudfunctions.googleapis.com/v1/operations/cGhvdG9zLWQxNWQ3L3VzLWNlbnRyYWwxL29uRmlsZUNoYW5nZS82VmtsOWt2M284bw  
+ 

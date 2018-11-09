@@ -1,4 +1,6 @@
 import {MDCTopAppBar} from '@material/top-app-bar/index';
+import {MDCRipple} from '@material/ripple';
+import {MDCLinearProgressFoundation} from '@material/linear-progress';
 import '../css/index.scss';
 import crypto from 'crypto';
 import mime from 'mime';
@@ -65,7 +67,7 @@ const getFile = imgUri => {
   });
 }
 
-const getImageElement = (src) => {
+const getImageElement = (src, type) => {
   let li = document.createElement('li');
   let img = document.createElement('img');
   let div = document.createElement('div');
@@ -82,6 +84,12 @@ const getImageElement = (src) => {
   li.appendChild(img);
   li.appendChild(img);
 
+  if(type === 'video/mp4') {
+    span.setAttribute('class', 'material-icons type-video');
+    span.innerText = 'play_circle_filled';
+    li.append(span);
+  }
+
   return li;
 }
 
@@ -91,12 +99,28 @@ const openGalleryEvent = async () => {
   
   navigator.camera.getPicture(imageUri => {
     console.log(imageUri);
-    const uri = `file://${imageUri}`;
+    if(!imageUri.startsWith('file://')) {
+      const uri = `file://${imageUri}`;
+      resolveFile(uri);
+    } else {
+      resolveFile(imageUri);
+    }
+  }, error => {
+    console.debug("Unable to obtain picture: " + error, "app");
+  }, options);
+}
+
+const openCameraEvent = async () => {
+  const srcType = Camera.PictureSourceType.CAMERA;
+  const options = setOptions(srcType);
+  
+  navigator.camera.getPicture(imageUri => {
+    console.log(imageUri);
+    const uri = `${imageUri}`;
     resolveFile(uri);
   }, error => {
     console.debug("Unable to obtain picture: " + error, "app");
   }, options);
-
 }
 
 const resolveFile = async imageUri => {
@@ -141,16 +165,34 @@ var app = {
   },
   
   receivedEvent: async function(id) {
+    const fabRipple = new MDCRipple(document.querySelector('.mdc-fab'));
     const topAppBarElement = document.querySelector('.mdc-top-app-bar');
+    // const progressBar = new MDCLinearProgressFoundation(document.querySelector('.mdc-linear-progress'));
     const topAppBar = new MDCTopAppBar(topAppBarElement);
     const openGalleryBtn = document.querySelector('#open-gallery');
+    const openCameraBtn = document.querySelector('#open-camera');
     const player = document.querySelector('.image-player');
     const videoPlayer = document.querySelector('.video-player');
     const btnCloseImage = document.querySelector('.image-player .close');
     const btnCloseVideo = document.querySelector('.video-player .close');
     
+    // progressBar.setProgress(0.5);
+    // progressBar.open();
+    // progressBar.setBuffer(0.5);
+    // progressBar.close();
+
+    document.querySelector('#open-fabs').addEventListener('click', () => {
+      document.querySelector('.fab-children').classList.toggle('active');
+      document.querySelector('close').classList.toggle('hidden');
+      document.querySelector('add').classList.toggle('hidden');
+    });
+
     openGalleryBtn.addEventListener('click', () => {
       openGalleryEvent();
+    });
+
+    openCameraBtn.addEventListener('click', () => {
+      openCameraEvent();
     });
 
     btnCloseImage.addEventListener('click', () => {
@@ -173,7 +215,7 @@ var app = {
     // Leemos cada vez que se añada un nuevo hijo
     dbRef.on('child_added', data => {
       storageRef.child(data.val().md).getDownloadURL().then(url => {
-        element = getImageElement(url);
+        element = getImageElement(url, data.val().type);
         element.setAttribute('id', data.val().id);
         element.dataset.original = data.val().original;
         element.dataset.type = data.val().type;

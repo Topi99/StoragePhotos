@@ -91,7 +91,8 @@ const createImage = (args, file) => {
   }).then(() => {
     return args.destBucket.upload(newTmpFile, {
       destination: newFileName,
-      metadata: args.metadata
+      metadata: args.metadata,
+      resumable: false
     })
   })
 };
@@ -108,7 +109,8 @@ const createImageVideo = (args, file) => {
   }).then(() => {
     return args.destBucket.upload(newTmpFile, {
       destination: newFileName,
-      metadata: args.metadata
+      metadata: args.metadata,
+      resumable: false
     })
   })
 }
@@ -120,7 +122,8 @@ const rename = (args, file) => {
     file.delete((err, response) => {console.log(err); console.log(response);});
     return args.destBucket.upload(args.tmpFilePath, {
       destination: args.ext + path.basename(args.filePath),
-      metadata: args.metadata
+      metadata: args.metadata,
+      resumable: false
     })
   })
 };
